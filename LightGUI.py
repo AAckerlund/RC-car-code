@@ -1,5 +1,3 @@
-# code based off this repo: https://github.com/huberf/Computer-to-Arduino-Bluetooth
-# This project requires PyBluez
 import bluetooth
 import serial
 import tkinter as tk
@@ -53,6 +51,11 @@ r = tk.Button(frame, text="right", command=right, width=buttonWidth)
 s = tk.Button(frame, text="stop", command=stop, width=buttonWidth)
 msgLabel = tk.Label(frame, text="")
 
+try:
+    sock.connect((bd_addr, port))
+except:
+    msgLabel.config(text="Could not connect to device.")
+
 #Positions all elements of the GUI
 f.pack(side=tk.TOP)
 msgLabel.pack(side=tk.BOTTOM)
@@ -62,11 +65,6 @@ r.pack(side=tk.RIGHT)
 s.pack()
 
 root.mainloop()
-
-try:
-    sock.connect((bd_addr, port))
-except:
-    msgLabel.config(text="Could not connect to device.")
 
 #The below code is used to find all nearby bluetooth devices.
 
