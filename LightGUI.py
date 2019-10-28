@@ -2,6 +2,7 @@
 # This project requires PyBluez
 import bluetooth
 import serial
+import tkinter as tk
 
 #Look for all Bluetooth devices the computer knows about.
 print ("Searching for device...")
@@ -13,36 +14,59 @@ port = 1
 #Create a connection to the socket for Bluetooth communication
 sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 
-def disconnect():
-    #Close socket connection to device
-    self.sock.close()
+def forward():
+    send("f")
+def back():
+    send("b")
+def left():
+    send("l")
+def right():
+    send("r")
+def stop():
+    send("s")
 
-def main():
-    userInput = ""
-    possibleInputs = ['r', 'l', 'f', 'b', 's', 'z']
-    while(userInput != "q"):
-        userInput = input("give me a new command: ")
-        if(userInput in possibleInputs):
-            try:
-                sock.send(userInput.encode())
-                print(userInput)
-            except:
-                print("An error occurred while sending the command. Please resend the command.")
-        elif(userInput == 'q'):
-            print("Thanks for using")
-        else:
-            print("\nvalid inputs are as follows:")
-            print("\tr (turn right)\n\tl (turn left)\n\tf (go forward)\n\tb (go backwards)\n\ts (stop)\n\tz (random direction)\n\tq (quit the program).\n")
+def send(msg):#sends the data to the hc-06 module
+    try:
+        sock.send(msg.encode())
+        msgLabel.config(text=msg)
+    except:
+        msgLabel.config(text="An error occurred while sending the command.\nPlease resend the command.")          
+
+def onClose():
+    sock.close()
+    root.destroy()
+
+#makes the GUI
+root = tk.Tk()
+root.title("RC Controller")
+root.protocol("WM_DELETE_WINDOW", onClose)
+
+frame = tk.Frame(root)
+frame.pack()
+
+#Declares all elemens of the GUI
+buttonWidth = 13
+f = tk.Button(frame, text="forward", command=forward, width=buttonWidth)
+b = tk.Button(frame, text="back", command=back, width=buttonWidth)
+l = tk.Button(frame, text="left", command=left, width=buttonWidth)
+r = tk.Button(frame, text="right", command=right, width=buttonWidth)
+s = tk.Button(frame, text="stop", command=stop, width=buttonWidth)
+msgLabel = tk.Label(frame, text="")
+
+#Positions all elements of the GUI
+f.pack(side=tk.TOP)
+msgLabel.pack(side=tk.BOTTOM)
+b.pack(side=tk.BOTTOM)
+l.pack(side=tk.LEFT)
+r.pack(side=tk.RIGHT)
+s.pack()
+
+root.mainloop()
 
 try:
     sock.connect((bd_addr, port))
-    try:
-        main()
-    except:
-        print("A fatal error occurred while getting user input.")
 except:
-    print("Could not connect to device.")
-sock.close()
+    msgLabel.config(text="Could not connect to device.")
 
 #The below code is used to find all nearby bluetooth devices.
 
