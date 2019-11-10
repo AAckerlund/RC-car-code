@@ -15,7 +15,8 @@ int speedL, speedR;
 char inData[64];
 char inChar = -1;
 */
-char k = 'a';
+String k = String("a");
+int spaceLoc = 0;
 
 void setup()
 { 
@@ -37,46 +38,25 @@ void setup()
  
 void loop()
 {
-  while(bluetooth.available())
+  while(bluetooth.available())//input is "<int> <int>"
   {
-    k = bluetooth.read();
+    k = String(bluetooth.read());//proceeding assuming that the entire string is read at once.
     Serial.println(k);
-
-    if(k == 'f')//go forward
+    for(int i = 0; i<k.length(); i++)
     {
-      speedL = 110;
-      speedR = 70;
+      if(k.charAt(i).equals(" ")
+      {
+        spaceLoc = i;
+        break;
+      }
     }
-    else if(k == 'b')//go backward
-    {
-      speedL = 70;
-      speedR = 110;
-    }
-
-    else if(k == 'r')//go right
-    {
-      speedR = 110;
-      speedL = 100;
-    }
-    else if(k == 'l')//go left
-    {
-      speedR = 80;
-      speedL = 70;
-    }
-    else if(k == 'z')//do random
-    {
-      speedL = random(0,180);
-      speedR = random(0,180);
-    }
-    else//stop
-    {
-      speedL = 90;
-      speedR = 90;
-    }
-     l.write(speedL);
-     r.write(speedR);
+    speedL = k.substring(0,i-1).toInt();
+    speedR = k.substring(i+1,k.length()-1).toInt();
+    
+    l.write(speedL);
+    r.write(speedR);
      
     //Wait ten milliseconds to decrease unnecessary hardware strain
-     delay(10);
+    delay(10);
    }
 }
