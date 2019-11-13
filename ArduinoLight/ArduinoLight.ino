@@ -11,10 +11,6 @@ SoftwareSerial bluetooth(rxpin, txpin);
 Servo l, r;
 
 int speedL, speedR;
-/*
-char inData[64];
-char inChar = -1;
-*/
 String k = String("a");
 int spaceLoc = 0;
 
@@ -31,8 +27,6 @@ void setup()
   //speed value are 0-180 with 90 being stopped (in theory)
   speedL = 90;
   speedR = 90;
-  //Set the lightbulb pin to put power out
-//  Serial.println("Setup Finished");
   
 }
  
@@ -40,23 +34,39 @@ void loop()
 {
   while(bluetooth.available())//input is "<int> <int>"
   {
-    k = String(bluetooth.read());//proceeding assuming that the entire string is read at once.
-    Serial.println(k);
-    for(int i = 0; i<k.length(); i++)
+    int i;
+    speedL = 0;
+    for(i = 0; i < 3; i++)//ascii value for a space
     {
-      if(k.charAt(i).equals(" ")
-      {
-        spaceLoc = i;
-        break;
-      }
+      k = bluetooth.read();//numbers are 48 above what they truly are
+      speedL = (speedL*10) + (k.toInt() - 48);
     }
-    speedL = k.substring(0,i-1).toInt();
-    speedR = k.substring(i+1,k.length()-1).toInt();
+    if(speedL > 180 || speedL < 0)//speedL is out of bounds
+    {
+      Serial.println("Left");
+      break;
+    }
+//    Serial.println("k: " + k + " speedL: " + speedL);
+    k = bluetooth.read();//reads the space
     
+    speedR = 0;
+    for(i = 0; i < 3; i++)
+    {
+      k = bluetooth.read();
+      speedR = (speedR*10) + (k.toInt() - 48);
+    }
+//    Serial.println("k: " + k + " speedR: " + speedR);
+//    Serial.println("\n\n");
+    if(speedR > 180 || speedR < 0)
+    {
+      Serial.println("Right");
+      break;
+    }
+    bluetooth.flush();
     l.write(speedL);
     r.write(speedR);
      
     //Wait ten milliseconds to decrease unnecessary hardware strain
-    delay(10);
+    delay(100);
    }
 }
