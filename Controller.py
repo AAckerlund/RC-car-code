@@ -79,9 +79,8 @@ def getInput(sock):#gets the user input
         #joystick.get_axis(5) gets the data for the right trigger
         #joystick.get_button(5) gets the data for the right bumper
 
-        #print(normString(normalize(joystick.get_axis(2), joystick.get_button(4)), normalize(axisR, buttonR)))
-
-        send(sock, normString(normalize(joystick.get_axis(2), joystick.get_button(4)), normalize(axisR, buttonR)))
+        #print(normString(normalize(joystick.get_axis(2), joystick.get_button(4)), normalize(joystick.get_axis(5), joystick.get_button(5))))
+        send(sock, normString(normalize(joystick.get_axis(2), joystick.get_button(4)), normalize(joystick.get_axis(5), -1*(joystick.get_button(5)-1))))
 
         #limits the number of loops per seconds
         clock.tick(10)
@@ -91,12 +90,12 @@ def main():
         connectJoy()
     except:
         print("could not find a controller. Please make sure you have one plugged in.")
-
+    print("joystick connected")
     try:
         sock = connectBluetooth()
     except:
         print("could not find the device.")
-    
+    print("connection connected")
     try:
         getInput(sock)
     except:
