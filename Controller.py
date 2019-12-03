@@ -5,7 +5,7 @@ import pygame
 def connectBluetooth():#attempts to create a connection to a bluetooth device
 
     #Look for all Bluetooth devices the computer knows about.
-    bd_addr = "00:18:E4:35:59:5F"#the mac address of the device you wish to connect to (this particular addess is for an hc-06 module)
+    bd_addr = "20:18:06:28:47:74"#the mac address of the device you wish to connect to (this particular addess is for an hc-06 module)
     port = 1
     
     sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)#Create a connection to the socket for Bluetooth communication
@@ -79,11 +79,23 @@ def getInput(sock):#gets the user input
         #joystick.get_axis(5) gets the data for the right trigger
         #joystick.get_button(5) gets the data for the right bumper
 
-        #print(normString(normalize(joystick.get_axis(2), joystick.get_button(4)), normalize(joystick.get_axis(5), joystick.get_button(5))))
+        print(normString(normalize(joystick.get_axis(2), joystick.get_button(4)), normalize(joystick.get_axis(5), joystick.get_button(5))))
         send(sock, normString(normalize(joystick.get_axis(2), joystick.get_button(4)), normalize(joystick.get_axis(5), -1*(joystick.get_button(5)-1))))
 
         #limits the number of loops per seconds
         clock.tick(10)
+
+def doGetInput(sock):
+    try:
+        getInput(sock)
+    except:
+        print("An error occured while recieving inputs.")
+        while(sock == None):
+            try:
+                sock = connectBluetooth()
+                doGetInput(sock)
+            except:
+                print("could not find the device.")
 
 def main():
     try:
@@ -96,10 +108,8 @@ def main():
     except:
         print("could not find the device.")
     print("connection connected")
-    try:
-        getInput(sock)
-    except:
-        print("An error occured while recieving inputs.")
+    
+    doGetInput(sock)
     Close(sock)
 
 main()
