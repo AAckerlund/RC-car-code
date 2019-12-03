@@ -1,4 +1,4 @@
-#For Users
+# For Users
 
   * Note: To control this vehicle an xbox controller is required.
 There are 4 buttons on an xbox controller that act as the controls for this vehicle. They are the bumpers and triggers.
@@ -7,7 +7,7 @@ There are 4 buttons on an xbox controller that act as the controls for this vehi
 
   * The triggers and simillarly located on the side facing away from a person holding the controller. *They are located right below the bumpers and are typically marked with a LT and RT for Left Trigger and Right Trigger respectively.*
 
-##The controls
+## The controls
 
 The left bumper and trigger control the wheels on the left side of the car. Similarly the right bumper and trigger control the right wheels.
 
@@ -17,13 +17,13 @@ The bumpers define what direction their respective wheels will turn. When presse
 The triggers define how fast the wheels turn. While not pressed the wheels will not spin. When fully pressed the wheels will turn as fast as they can.
   * Pressing the right trigger will cause the right wheels to turn and will not affect the speed of the left wheels. This is the same for the left trigger and wheels.
 
-#For Developers
+# For Developers
 
 To download this code either download it as a zip file or clone it into your prefered directory.
 There are 2 files that you can edit. *Controller.py* and *ArduinoLight.ino*
   * Note: To compile the .ino file you will need the Arduino IDE found [here](https://www.arduino.cc/en/main/software)
 
-##To run the code
+## To run the code
 
 1. make sure you have:
 	1. The vehicle
